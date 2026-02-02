@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PoinBumi - Jembatan antara rumah tangga dan UMKM pengolah limbah untuk ekonomi sirkular">
+    <meta name="theme-color" content="#457B9D">
+    <title>PoinBumi - Ekonomi Sirkular Ramah Lingkungan</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="manifest" href="#" id="manifest-placeholder">
+    
+    <style>
+        :root {
+            --primary-color: #A8DADC;
+            --primary-dark: #457B9D;
+            --secondary-color: #F4A261;
+            --bg-light: #F1FAEE;
+            --text-dark: #1D3557;
+            --white: #FFFFFF;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--white);
+            color: var(--text-dark);
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+        
+        /* Loading Spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--primary-color);
+            border-top: 4px solid var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+        
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            color: var(--white);
+            padding: 16px;
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--secondary-color);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(69, 123, 157, 0.9), rgba(168, 218, 220, 0.8)), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23A8DADC" width="1200" height="600"/><path fill="%23457B9D" opacity="0.1" d="M0,300 Q300,200 600,300 T1200,300 L1200,600 L0,600 Z"/></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 40px 16px;
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            opacity: 0.95;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+        
+        /* Buttons */
+        .btn-primary-custom {
+            background: var(--primary-dark);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+        
+        .btn-primary-custom:hover {
+            background: #3a6785;
+            transform: scale(1.05);
+            color: var(--white);
+        }
+        
+        /* Cards */
+        .card-custom {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--bg-light);
+        }
+        
+        .card-custom:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        /* Content Sections */
+        .content-section {
+            padding: 16px;
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Dashboard Poin */
+        .points-display {
+            background: linear-gradient(135deg, var(--secondary-color), #e89350);
+            color: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(244, 162, 97, 0.3);
+        }
+        
+        .points-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 16px 0;
+        }
+        
+        .points-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* History List */
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .history-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 24px;
+        }
+        
+        .history-details {
+            flex: 1;
+        }
+        
+        .history-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .history-date {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .history-points {
+            font-weight: 700;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+        
+        /* UMKM List */
+        .umkm-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px var(--shadow);
+            border-left: 4px solid var(--primary-dark);
+        }
+        
+        .umkm-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 32px;
+        }
+        
+        .umkm-info {
+            flex: 1;
+        }
+        
+        .umkm-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        
+        .umkm-type {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .umkm-distance {
+            display: inline-block;
+            background: var(--bg-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--primary-dark);
+        }
+        
+        /* Product Cards */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+        
+        .product-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 140px;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        
+        .product-info {
+            padding: 12px;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        
+        .product-price {
+            color: var(--secondary-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .product-points {
+            background: var(--primary-color);
+            color: var(--primary-dark);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        
+        .filter-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--primary-color);
+            background: var(--white);
+            color: var(--primary-dark);
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-tab.active {
+            background: var(--primary-dark);
+            color: var(--white);
+            border-color: var(--primary-dark);
+        }
+        
+        /* Community Section */
+        .challenge-card {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            color: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .challenge-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+        
+        .challenge-progress {
+            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        
+        .challenge-progress-bar {
+            background: var(--secondary-color);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .article-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--bg-light);
+        }
+        
+        .article-thumb {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .article-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .article-excerpt {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Profile Section */
+        .profile-header {
+            text-align: center;
+            padding: 32px 16px;
+            background: var(--bg-light);
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: var(--primary-dark);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 3rem;
+        }
+        
+        .profile-name {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+        
+        .profile-email {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .profile-stat {
+            text-align: center;
+        }
+        
+        .profile-stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .profile-stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background: var(--bg-light);
+            transform: translateX(4px);
+        }
+        
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 20px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--bg-light);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px var(--shadow);
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-dark);
+            background: var(--primary-color);
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+        }
+        
+        .nav-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Modal */
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+        }
+        
+        .modal-header {
+            background: var(--primary-dark);
+            color: var(--white);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        /* Form Elements */
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid var(--bg-light);
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 0.2rem rgba(69, 123, 157, 0.25);
+        }
+        
+        /* Section Title */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* --- FITUR PAYMENT CSS --- */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        /* Payment Styles */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .method-item {
+            border: 2px solid var(--bg-light);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .method-item:hover {
+            border-color: var(--primary-dark);
+            background-color: var(--bg-light);
+        }
+        
+        .method-item.selected {
+            border-color: var(--primary-dark);
+            background-color: rgba(69, 123, 157, 0.1);
+        }
+        
+        .method-icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .total-payment {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+
+
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+        }
+        
+        /* Responsive */
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            
+            .points-number {
+                font-size: 2.5rem;
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Memuat PoinBumi...</div>
+    </div>
+
+    <header class="app-header">
+        <div class="logo">
+            <span class="logo-icon">🌿</span>
+            <span>PoinBumi</span>
+        </div>
+    </header>
+
+    <section id="beranda" class="content-section active">
+        <div class="hero">
+            <h1>Ubah Limbah Menjadi Berkah</h1>
+            <p>Bergabunglah dengan ekonomi sirkular untuk lingkungan lebih hijau</p>
+            <button class="btn btn-primary-custom" onclick="showSection('poin')">Jelajahi Poin</button>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">150</div>
+                    <div class="stat-label">Ton Limbah Didaur Ulang</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2,500+</div>
+                    <div class="stat-label">Pengguna Aktif</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">45</div>
+                    <div class="stat-label">UMKM Mitra</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="padding: 16px;">
+            <h2 class="section-title">
+                <span>📈</span>
+                Kegiatan Terbaru
+            </h2>
+            
+            <div class="card-custom">
+                <h5>🎯 Tantangan Minggu Ini</h5>
+                <p>Kumpulkan 5kg plastik untuk mendapatkan 500 poin bonus!</p>
+                <div class="challenge-progress">
+                    <div class="challenge-progress-bar" style="width: 60%"></div>
+                </div>
+                <small>3kg / 5kg tercapai</small>
+            </div>
+            
+            <div class="card-custom">
+                <h5>📢 Pengumuman</h5>
+                <p>UMKM baru bergabung: <strong>Rumah Plastik Kreatif</strong></p>
+                <small class="text-muted">2 hari yang lalu</small>
+            </div>
+            
+            <div class="card-custom">
+                <h5>🌱 Tips Hari Ini</h5>
+                <p>Pisahkan sampah organik dan anorganik untuk memudahkan daur ulang!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="poin" class="content-section">
+        <div class="points-display">
+            <div class="points-label">Total Poin Anda</div>
+            <div class="points-number" id="userPoints">1,250</div>
+            <button class="btn btn-light mt-3" data-bs-toggle="modal" data-bs-target="#redeemModal">
+                🎁 Tukar Poin
+            </button>
+        </div>
+        
+        <h3 class="section-title">
+            <span>⏱️</span>
+            Riwayat Poin
+        </h3>
+        
+        <div id="historyList">
+            <div class="history-item">
+                <div class="history-icon">➕</div>
+                <div class="history-details">
+                    <div class="history-title">Pengumpulan Plastik</div>
+                    <div class="history-date">28 Januari 2026</div>
+                </div>
+                <div class="history-points">+250</div>
+            </div>
+            
+            <div class="history-item">
+                <div class="history-icon">➖</div>
+                <div class="history-details">
+                    <div class="history-title">Tukar Voucher Pasar</div>
+                    <div class="history-date">25 Januari 2026</div>
+                </div>
+                <div class="history-points" style="color: #e63946;">-500</div>
+            </div>
+            
+            <div class="history-item">
+                <div class="history-icon">➕</div>
+                <div class="history-details">
+                    <div class="history-title">Pengumpulan Kertas</div>
+                    <div class="history-date">22 Januari 2026</div>
+                </div>
+                <div class="history-points">+150</div>
+            </div>
+            
+            <div class="history-item">
+                <div class="history-icon">🏆</div>
+                <div class="history-details">
+                    <div class="history-title">Bonus Tantangan</div>
+                    <div class="history-date">20 Januari 2026</div>
+                </div>
+                <div class="history-points">+500</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="umkm" class="content-section">
+        <h2 class="section-title">
+            <span>🏢</span>
+            UMKM Pengolah Limbah
+        </h2>
+        
+        <div class="filter-tabs" id="umkmFilter">
+            <div class="filter-tab active" data-filter="semua">Semua</div>
+            <div class="filter-tab" data-filter="plastik">Plastik</div>
+            <div class="filter-tab" data-filter="kertas">Kertas</div>
+            <div class="filter-tab" data-filter="logam">Logam</div>
+            <div class="filter-tab" data-filter="organik">Organik</div>
+        </div>
+        
+        <div id="umkmList">
+            <div class="umkm-item" data-type="plastik">
+                <div class="umkm-icon">📦</div>
+                <div class="umkm-info">
+                    <div class="umkm-name">Rumah Plastik Kreatif</div>
+                    <div class="umkm-type">Pengolah Plastik</div>
+                    <span class="umkm-distance">📍 2.5 km</span>
+                </div>
+                <button class="btn btn-sm btn-primary-custom" onclick="schedulePickup('Rumah Plastik Kreatif')">Jadwal</button>
+            </div>
+            
+            <div class="umkm-item" data-type="kertas">
+                <div class="umkm-icon">📰</div>
+                <div class="umkm-info">
+                    <div class="umkm-name">Kertas Baru Mandiri</div>
+                    <div class="umkm-type">Pengolah Kertas</div>
+                    <span class="umkm-distance">📍 3.8 km</span>
+                </div>
+                <button class="btn btn-sm btn-primary-custom" onclick="schedulePickup('Kertas Baru Mandiri')">Jadwal</button>
+            </div>
+            
+            <div class="umkm-item" data-type="logam">
+                <div class="umkm-icon">🔨</div>
+                <div class="umkm-info">
+                    <div class="umkm-name">Logam Mulia Daur Ulang</div>
+                    <div class="umkm-type">Pengolah Logam</div>
+                    <span class="umkm-distance">📍 5.2 km</span>
+                </div>
+                <button class="btn btn-sm btn-primary-custom" onclick="schedulePickup('Logam Mulia Daur Ulang')">Jadwal</button>
+            </div>
+            
+            <div class="umkm-item" data-type="organik">
+                <div class="umkm-icon">🌿</div>
+                <div class="umkm-info">
+                    <div class="umkm-name">Kompos Hijau Nusantara</div>
+                    <div class="umkm-type">Pengolah Organik</div>
+                    <span class="umkm-distance">📍 1.8 km</span>
+                </div>
+                <button class="btn btn-sm btn-primary-custom" onclick="schedulePickup('Kompos Hijau Nusantara')">Jadwal</button>
+            </div>
+            
+            <div class="umkm-item" data-type="plastik">
+                <div class="umkm-icon">💧</div>
+                <div class="umkm-info">
+                    <div class="umkm-name">Botol Bahagia</div>
+                    <div class="umkm-type">Pengolah Botol Plastik</div>
+                    <span class="umkm-distance">📍 4.1 km</span>
+                </div>
+                <button class="btn btn-sm btn-primary-custom" onclick="schedulePickup('Botol Bahagia')">Jadwal</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="pasar" class="content-section">
+        <h2 class="section-title">
+            <span>🏪</span>
+            Pasar Lokal
+        </h2>
+        
+        <div class="filter-tabs" id="pasarFilter">
+            <div class="filter-tab active" data-filter="semua">Semua</div>
+            <div class="filter-tab" data-filter="sayuran">Sayuran</div>
+            <div class="filter-tab" data-filter="produk">Produk Daur Ulang</div>
+            <div class="filter-tab" data-filter="kerajinan">Kerajinan</div>
+        </div>
+        
+        <div class="product-grid" id="productList">
+            <div class="product-card" data-type="sayuran">
+                <div class="product-image">🥬</div>
+                <div class="product-info">
+                    <div class="product-name">Sayur Organik Paket A</div>
+                    <div class="product-price">Rp 35.000</div>
+                    <span class="product-points">500 poin = -20%</span>
+                    <button class="btn btn-sm btn-primary-custom w-100 mt-2" onclick="checkoutProduct('Sayur Organik Paket A', 35000, 500, 20)">Beli</button>
+                </div>
+            </div>
+            
+            <div class="product-card" data-type="produk">
+                <div class="product-image">🛍️</div>
+                <div class="product-info">
+                    <div class="product-name">Tas Belanja Daur Ulang</div>
+                    <div class="product-price">Rp 25.000</div>
+                    <span class="product-points">300 poin = -30%</span>
+                    <button class="btn btn-sm btn-primary-custom w-100 mt-2" onclick="checkoutProduct('Tas Belanja Daur Ulang', 25000, 300, 30)">Beli</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-type="kerajinan">
+                <div class="product-image">🎨</div>
+                <div class="product-info">
+                    <div class="product-name">Vas Bunga Botol</div>
+                    <div class="product-price">Rp 45.000</div>
+                    <span class="product-points">600 poin = -25%</span>
+                    <button class="btn btn-sm btn-primary-custom w-100 mt-2" onclick="checkoutProduct('Vas Bunga Botol', 45000, 600, 25)">Beli</button>
+                </div>
+            </div>
+            </div>
+    </section>
+
+    <section id="komunitas" class="content-section">
+        <h2 class="section-title">
+            <span>👥</span>
+            Komunitas & Edukasi
+        </h2>
+        
+        <div class="challenge-card">
+            <div class="challenge-title">🏆 Tantangan Mingguan</div>
+            <p>Kumpulkan 5kg plastik minggu ini untuk bonus 500 poin!</p>
+            <div class="challenge-progress">
+                <div class="challenge-progress-bar" style="width: 60%"></div>
+            </div>
+            <small>3.0kg / 5.0kg - 60% tercapai</small>
+        </div>
+        
+        <h3 class="section-title">
+            <span>📚</span>
+            Artikel Edukasi
+        </h3>
+        
+        <div class="article-item">
+            <div class="article-thumb">🌿</div>
+            <div class="article-content">
+                <h4>Cara Memilah Sampah dengan Benar</h4>
+                <p class="article-excerpt">Pelajari teknik pemilahan sampah yang efektif untuk memaksimalkan daur ulang...</p>
+            </div>
+        </div>
+        
+        <div class="article-item">
+            <div class="article-thumb">💧</div>
+            <div class="article-content">
+                <h4>Dampak Plastik terhadap Lingkungan</h4>
+                <p class="article-excerpt">Memahami bahaya plastik sekali pakai dan alternatif ramah lingkungan...</p>
+            </div>
+        </div>
+        
+        <div class="article-item">
+            <div class="article-thumb">♻️</div>
+            <div class="article-content">
+                <h4>Ekonomi Sirkular: Masa Depan Berkelanjutan</h4>
+                <p class="article-excerpt">Bagaimana ekonomi sirkular dapat mengubah cara kita mengelola sumber daya...</p>
+            </div>
+        </div>
+        
+        <h3 class="section-title mt-4">
+            <span>💬</span>
+            Forum Diskusi
+        </h3>
+        
+        <div class="card-custom">
+            <h5>💬 Topik Hangat</h5>
+            <div class="mb-3">
+                <strong>Tips Mengurangi Sampah Plastik di Rumah</strong>
+                <div class="text-muted small">45 komentar • 2 jam lalu</div>
+            </div>
+            <div class="mb-3">
+                <strong>Pengalaman Kolaborasi dengan UMKM</strong>
+                <div class="text-muted small">23 komentar • 5 jam lalu</div>
+            </div>
+            <button class="btn btn-sm btn-primary-custom">Lihat Semua Forum</button>
+        </div>
+    </section>
+
+    <section id="profil" class="content-section">
+        <div class="profile-header">
+            <div class="profile-avatar">👤</div>
+            <div class="profile-name" id="profileName">Pengguna PoinBumi</div>
+            <div class="profile-email" id="profileEmail">user@poinbumi.id</div>
+            
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <div class="profile-stat-number">1,250</div>
+                    <div class="profile-stat-label">Poin</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-number">12</div>
+                    <div class="profile-stat-label">Kontribusi</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-number">45kg</div>
+                    <div class="profile-stat-label">Limbah</div>
+                </div>
+            </div>
+        </div>
+        
+        <h3 class="section-title">
+            <span>⚙️</span>
+            Pengaturan
+        </h3>
+        
+        <div class="menu-item" onclick="editProfile()">
+            <div class="menu-icon">👤</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600;">Edit Profil</div>
+                <small class="text-muted">Ubah informasi pribadi</small>
+            </div>
+            <span>→</span>
+        </div>
+        
+        <div class="menu-item" onclick="showNotifications()">
+            <div class="menu-icon">🔔</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600;">Notifikasi</div>
+                <small class="text-muted">Atur preferensi notifikasi</small>
+            </div>
+            <span>→</span>
+        </div>
+        
+        <div class="menu-item" onclick="showHistory()">
+            <div class="menu-icon">⏱️</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600;">Riwayat Lengkap</div>
+                <small class="text-muted">Lihat semua aktivitas</small>
+            </div>
+            <span>→</span>
+        </div>
+        
+        <div class="menu-item" onclick="showHelp()">
+            <div class="menu-icon">❓</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600;">Bantuan & FAQ</div>
+                <small class="text-muted">Dapatkan bantuan</small>
+            </div>
+            <span>→</span>
+        </div>
+        
+        <div class="menu-item" onclick="showAbout()">
+            <div class="menu-icon">ℹ️</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600;">Tentang PoinBumi</div>
+                <small class="text-muted">Versi 1.0.0</small>
+            </div>
+            <span>→</span>
+        </div>
+        
+        <button class="btn btn-danger w-100 mt-3" onclick="logout()">
+            🚪 Keluar
+        </button>
+    </section>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="showSection('beranda')">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Beranda</span>
+        </div>
+        <div class="nav-item" onclick="showSection('poin')">
+            <span class="nav-icon">💰</span>
+            <span class="nav-label">Poin</span>
+        </div>
+        <div class="nav-item" onclick="showSection('umkm')">
+            <span class="nav-icon">🏢</span>
+            <span class="nav-label">UMKM</span>
+        </div>
+        <div class="nav-item" onclick="showSection('pasar')">
+            <span class="nav-icon">🏪</span>
+            <span class="nav-label">Pasar</span>
+        </div>
+        <div class="nav-item" onclick="showSection('profil')">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Profil</span>
+        </div>
+    </nav>
+
+    <div class="modal fade" id="redeemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🎁 Tukar Poin</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Poin tersedia: <strong id="modalPoints">1,250</strong></p>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Pilih Voucher</label>
+                        <select class="form-select" id="voucherSelect">
+                            <option value="">-- Pilih Voucher --</option>
+                            <option value="500">Diskon 10% Pasar Lokal (500 poin)</option>
+                            <option value="1000">Diskon 25% Pasar Lokal (1000 poin)</option>
+                            <option value="1500">Diskon 50% Pasar Lokal (1500 poin)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <small>ℹ️ Voucher akan dikirim ke email Anda setelah penukaran</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="redeemPoints()">Tukar Sekarang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Data Transaksi Saat Ini
+        let currentTransaction = {};
+
+        // Initialize App
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 1500);
+            
+            loadUserData();
+            
+            // Register Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register(createServiceWorkerBlob())
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            }
+            
+            setupFilters();
+        });
+
+        // Create Service Worker Blob
+        function createServiceWorkerBlob() {
+            const swCode = `
+                self.addEventListener('install', (event) => {
+                    event.waitUntil(
+                        caches.open('poinbumi-v1').then((cache) => {
+                            return cache.addAll(['/']);
+                        })
+                    );
+                });
+
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(
+                        caches.match(event.request).then((response) => {
+                            return response || fetch(event.request);
+                        })
+                    );
+                });
+            `;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            return URL.createObjectURL(blob);
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // User Data Management
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('poinbumiUser') || '{}');
+            
+            if (!userData.points) {
+                userData.points = 1250;
+                userData.name = 'Pengguna PoinBumi';
+                userData.email = 'user@poinbumi.id';
+                userData.contributions = 12;
+                userData.totalWaste = 45;
+                localStorage.setItem('poinbumiUser', JSON.stringify(userData));
+            }
+            
+            document.getElementById('userPoints').textContent = userData.points.toLocaleString('id-ID');
+            document.getElementById('modalPoints').textContent = userData.points.toLocaleString('id-ID');
+            if (document.getElementById('profileName')) {
+                document.getElementById('profileName').textContent = userData.name;
+                document.getElementById('profileEmail').textContent = userData.email;
+            }
+        }
+
+        // --- FITUR PAYMENT LOGIC ---
+        function checkoutProduct(name, price, points, discountPercent) {
+            const userData = JSON.parse(localStorage.getItem('poinbumiUser'));
+            
+            if (userData.points < points) {
+                alert('Poin Anda tidak cukup untuk mendapatkan diskon produk ini!');
+                return;
+            }
+
+            const discountAmount = (price * discountPercent) / 100;
+            const finalPrice = price - discountAmount;
+
+            currentTransaction = {
+                name: name,
+                price: price,
+                pointsUsed: points,
+                discount: discountAmount,
+                finalPrice: finalPrice
+            };
+
+            // Update Modal UI
+            document.getElementById('payProductName').textContent = name;
+            document.getElementById('payNormalPrice').textContent = 'Rp ' + price.toLocaleString('id-ID');
+            document.getElementById('payPointsUsed').textContent = points;
+            document.getElementById('payDiscount').textContent = '- Rp ' + discountAmount.toLocaleString('id-ID');
+            document.getElementById('payFinalTotal').textContent = 'Rp ' + finalPrice.toLocaleString('id-ID');
+            
+            // Reset selection
+            document.querySelectorAll('.method-item').forEach(m => m.classList.remove('selected'));
+            document.getElementById('selectedPaymentMethod').value = '';
+
+            const payModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            payModal.show();
+        }
+
+        function selectMethod(element, method) {
+            document.querySelectorAll('.method-item').forEach(m => m.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('selectedPaymentMethod').value = method;
+        }
+
+        function executePayment() {
+            const method = document.getElementById('selectedPaymentMethod').value;
+            
+            if (!method) {
+                alert('Silakan pilih metode pembayaran!');
+                return;
+            }
+
+            if (confirm(`Konfirmasi pembayaran Rp ${currentTransaction.finalPrice.toLocaleString('id-ID')} menggunakan ${method}?`)) {
+                // Proses pengurangan poin
+                const userData = JSON.parse(localStorage.getItem('poinbumiUser'));
+                userData.points -= currentTransaction.pointsUsed;
+                localStorage.setItem('poinbumiUser', JSON.stringify(userData));
+                
+                // Animasi poin di header
+                const pointsElement = document.getElementById('userPoints');
+                if (pointsElement) {
+                    animatePoints(pointsElement, userData.points + currentTransaction.pointsUsed, userData.points, 1000);
+                }
+
+                // Tutup modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+                modal.hide();
+
+                setTimeout(() => {
+                    alert(`✅ Pembayaran Berhasil!\n\nProduk: ${currentTransaction.name}\nMetode: ${method}\nTotal: Rp ${currentTransaction.finalPrice.toLocaleString('id-ID')}\n\nTerima kasih telah mendukung ekonomi sirkular!`);
+                    loadUserData();
+                }, 500);
+            }
+        }
+
+        // Points Animation
+        function animatePoints(element, start, end, duration) {
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current).toLocaleString('id-ID');
+            }, 16);
+        }
+
+        // Redeem Points
+        function redeemPoints() {
+            const voucherSelect = document.getElementById('voucherSelect');
+            const pointsNeeded = parseInt(voucherSelect.value);
+            
+            if (!pointsNeeded) {
+                alert('Silakan pilih voucher terlebih dahulu!');
+                return;
+            }
+            
+            const userData = JSON.parse(localStorage.getItem('poinbumiUser'));
+            
+            if (userData.points < pointsNeeded) {
+                alert('Poin Anda tidak cukup!');
+                return;
+            }
+            
+            if (confirm(`Apakah Anda yakin ingin menukar ${pointsNeeded} poin?`)) {
+                userData.points -= pointsNeeded;
+                localStorage.setItem('poinbumiUser', JSON.stringify(userData));
+                
+                const pointsElement = document.getElementById('userPoints');
+                animatePoints(pointsElement, userData.points + pointsNeeded, userData.points, 1000);
+                
+                const modal = bootstrap.Modal.getInstance(document.getElementById('redeemModal'));
+                modal.hide();
+                
+                setTimeout(() => {
+                    alert('✅ Penukaran berhasil! Voucher telah dikirim ke email Anda.');
+                    loadUserData();
+                }, 500);
+            }
+        }
+
+        // Schedule Pickup
+        function schedulePickup(umkmName) {
+            const date = prompt(`Jadwalkan pengambilan limbah dengan ${umkmName}\n\nMasukkan tanggal (DD/MM/YYYY):`);
+            
+            if (date) {
+                alert(`✅ Jadwal pengambilan berhasil dibuat!\n\nUMKM: ${umkmName}\nTanggal: ${date}\n\nAnda akan menerima notifikasi konfirmasi.`);
+            }
+        }
+
+        // Filter Setup
+        function setupFilters() {
+            document.querySelectorAll('#umkmFilter .filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('#umkmFilter .filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    
+                    document.querySelectorAll('#umkmList .umkm-item').forEach(item => {
+                        if (filter === 'semua' || item.dataset.type === filter) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            document.querySelectorAll('#pasarFilter .filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('#pasarFilter .filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    
+                    document.querySelectorAll('#productList .product-card').forEach(item => {
+                        if (filter === 'semua' || item.dataset.type === filter) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        // Profile Functions
+        function editProfile() {
+            const userData = JSON.parse(localStorage.getItem('poinbumiUser'));
+            const newName = prompt('Masukkan nama baru:', userData.name);
+            
+            if (newName && newName.trim() !== '') {
+                userData.name = newName.trim();
+                localStorage.setItem('poinbumiUser', JSON.stringify(userData));
+                loadUserData();
+                alert('✅ Profil berhasil diperbarui!');
+            }
+        }
+
+        function showNotifications() {
+            alert('🔔 Pengaturan Notifikasi\n\nFitur ini akan segera tersedia!');
+        }
+
+        function showHistory() {
+            showSection('poin');
+        }
+
+        function showHelp() {
+            alert('❓ Bantuan & FAQ\n\n1. Bagaimana cara mendapatkan poin?\n   Kumpulkan limbah dan serahkan ke UMKM mitra.\n\n2. Bagaimana cara menukar poin?\n   Buka halaman Poin dan klik "Tukar Poin".\n\n3. Butuh bantuan lebih lanjut?\n   Hubungi: support@poinbumi.id');
+        }
+
+        function showAbout() {
+            alert('ℹ️ Tentang PoinBumi\n\nVersi: 1.0.0\n\nPoinBumi adalah platform yang menghubungkan rumah tangga dengan UMKM pengolah limbah untuk menciptakan ekonomi sirkular yang berkelanjutan.\n\n© 2026 PoinBumi. All rights reserved.');
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                localStorage.removeItem('poinbumiUser');
+                alert('✅ Anda telah keluar. Terima kasih!');
+                location.reload();
+            }
+        }
+
+        // Notification Permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            setTimeout(() => {
+                if (confirm('Izinkan PoinBumi mengirim notifikasi untuk update poin dan promo?')) {
+                    Notification.requestPermission();
+                }
+            }, 3000);
+        }
+
+        // Create manifest.json dynamically
+        const manifest = {
+            name: "PoinBumi - Ekonomi Sirkular",
+            short_name: "PoinBumi",
+            description: "Jembatan antara rumah tangga dan UMKM pengolah limbah",
+            start_url: "./",
+            display: "standalone",
+            background_color: "#FFFFFF",
+            theme_color: "#457B9D",
+            orientation: "portrait",
+            icons: [
+                {
+                    src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ccircle fill='%23457B9D' cx='256' cy='256' r='256'/%3E%3Cpath fill='%23F4A261' d='M256 128c-35.3 0-64 28.7-64 64 0 17.7 7.2 33.7 18.8 45.3L256 416l45.3-178.7c11.6-11.6 18.8-27.6 18.8-45.3-.1-35.3-28.8-64-64.1-64z'/%3E%3C/svg%3E",
+                    sizes: "512x512",
+                    type: "image/svg+xml"
+                }
+            ]
+        };
+
+        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+    </script>
+
+    <div class="modal fade" id="paymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">💳 Konfirmasi Pembayaran</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 id="payProductName" class="fw-bold">Nama Produk</h6>
+                    <div class="total-payment">
+                        <div class="d-flex justify-content-between">
+                            <span>Harga Normal:</span>
+                            <span id="payNormalPrice">Rp 0</span>
+                        </div>
+                        <div class="d-flex justify-content-between text-success">
+                            <span>Diskon Poin (<span id="payPointsUsed">0</span> poin):</span>
+                            <span id="payDiscount">- Rp 0</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold text-primary">
+                            <span>Total Bayar:</span>
+                            <span id="payFinalTotal">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <label class="form-label mt-3">Pilih Metode Pembayaran:</label>
+                    <div class="payment-methods">
+                        <div class="method-item" onclick="selectMethod(this, 'Gopay')">
+                            <span class="method-icon">📱</span> Gopay
+                        </div>
+                        <div class="method-item" onclick="selectMethod(this, 'OVO')">
+                            <span class="method-icon">💜</span> OVO
+                        </div>
+                        <div class="method-item" onclick="selectMethod(this, 'Bank Transfer')">
+                            <span class="method-icon">🏦</span> Transfer
+                        </div>
+                        <div class="method-item" onclick="selectMethod(this, 'QRIS')">
+                            <span class="method-icon">🖼️</span> QRIS
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedPaymentMethod" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="executePayment()">Bayar Sekarang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
